@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  api:
+    build:
+      context: .
+      target: builder
+    image: api
+    env_file:
+      - ".env"
+    depends_on:
+      - postgres
+    ports:
+      - "${PORT}:${PORT}"
+      - "50051:50051"
+    volumes:
+      - ./:/build
+    # have to use $$ (double-dollar) so docker doesn't try to substitute a variable
+    command: reflex -r "\.go$$" -s -- sh -c "go run ./cmd/main.go"
+  postgres:
+    image: postgres:12-alpine
+    ports:
+      - 5432:5432
+    env_file:
+      - ".env"
+    environment:
+      PORT: "${POSTGRESQL_PORT}"
+      POSTGRES_USER: "${POSTGRESQL_USERNAME}"
+      POSTGRES_PASSWORD: "${POSTGRESQL_PASSWORD}"
+      POSTGRES_DB: "${POSTGRESQL_DATABASE}"
+    volumes:
+      - 'postgres-data:/var/lib/postgresql/data'
+volumes:
+  postgres-data:
