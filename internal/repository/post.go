@@ -19,6 +19,11 @@ func (r *PostRepository) Create(post *model.Post) error {
 	return err
 }
 
+func (r *PostRepository) CreateMany(posts []*model.Post) error {
+	_, err := r.DB.Model(&posts).Insert()
+	return err
+}
+
 func (r *PostRepository) Update(post *model.Post) error {
 	_, err := r.DB.Model(post).WherePK().Update()
 	return err
