@@ -11,6 +11,7 @@ type Post struct {
 
 type PostRepository interface {
 	Create(post *Post) error
+	CreateMany(posts []*Post) error
 	Update(post *Post) error
 	Delete(post *Post) error
 	FindByID(id uuid.UUID) (*Post, error)
